@@ -5,7 +5,11 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'WWW::Twittervision',
     VERSION_FROM      => 'lib/WWW/Twittervision.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
+    PREREQ_PM         => {
+                            URI => 1.35,
+                            LWP => 5.805,
+                            JSON => 2.07
+                          },
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/WWW/Twittervision.pm', # retrieve abstract from module
        AUTHOR         => 'Per Henrik Johansen <per.henrik.johansen@gmail.com>') : ()),

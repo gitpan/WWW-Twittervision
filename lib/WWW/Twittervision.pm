@@ -10,7 +10,7 @@ use URI::Escape;
 
 use vars qw($VERSION $DEBUG $TVURL);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 $TVURL = 'http://api.twittervision.com';
 
 sub new {
@@ -33,7 +33,6 @@ sub current_status {
     (exists($hash{screen_name})) ? $screen_name = $hash{screen_name} : croak('Needs a screen name');
 
     my $req_url = $self->{url} . '/user/current_status/' . $screen_name . '.json';
-    print "$req_url\n";
     my $req = HTTP::Request->new(GET => $req_url);
     
     my $ua = LWP::UserAgent->new;
@@ -101,6 +100,21 @@ sub parse_location {
     return @locations;
 }
 
+sub strip_location {
+    my $self = shift;
+    my %hash = @_; 
+
+    my $message = "";
+    (exists($hash{message})) ? $message = $hash{message} : croak('Needs a message string');
+    
+    my @locations = ();
+    $message =~ s/[lL]:([a-zA-Z]+=)?\s*([^:]+)?:?//g;
+    $message =~ s/\s\s*/ /g;
+    $message =~ s/^\s*//;
+    $message =~ s/\s*$//;
+    
+    return $message;
+}
 
 1;
 __END__
@@ -163,6 +177,11 @@ This function inspects a string for location patterns on
 the form l:<location>[:] (see also http://twittervision.com/maps/location_examples.html)
 The found locations are returned in an array. If none is found, the
 array is empty.
+
+=item strip_location
+
+This function removes location patterns from the message string and returns
+the result.
 
 =head1 BUGS
 
